@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Excel</title>
+</head>
+<body>
+    <h1>Download Excel File</h1>
+    <button onclick="location.href='/download_blob'">Download as Blob</button>
+    <button id="download-file-button">Download as File</button>
+
+    <script>
+        document.getElementById('download-file-button').addEventListener('click', function() {
+            fetch('/download_file')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.download_url) {
+                        const link = document.createElement('a');
+                        link.href = data.download_url;
+                        link.download = 'Report2.xlsx'; // You can specify the file name here
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } else {
+                        alert(data.message || 'File not found.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching file:', error);
+                });
+        });
+    </script>
+</body>
+</html>
